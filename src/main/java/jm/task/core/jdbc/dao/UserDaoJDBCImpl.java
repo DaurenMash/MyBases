@@ -91,7 +91,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     public void cleanUsersTable() {
-        String sql = "TRUNCATE TABLE USERS;";
+        String sql = "TRUNCATE TABLE users;";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.executeUpdate();
         } catch (SQLException e) {
