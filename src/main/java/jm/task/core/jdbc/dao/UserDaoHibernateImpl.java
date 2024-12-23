@@ -23,13 +23,13 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         String sql = """
-                    CREATE TABLE IF NOT EXISTS users \
-                    (
-                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                        name VARCHAR(64),
-                        lastname VARCHAR(64),
-                        age TINYINT NOT NULL
-                    );""";
+                CREATE TABLE IF NOT EXISTS users \
+                (
+                    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                    name VARCHAR(64),
+                    lastname VARCHAR(64),
+                    age TINYINT NOT NULL
+                );""";
 
         try (Session session = Util.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -76,16 +76,20 @@ public class UserDaoHibernateImpl implements UserDao {
         }
 
     }
+//    try (Session session = getSessionFactory().openSession()) {
+//        transaction = session.beginTransaction();
+//        User userToDelete = session.load(User.class, id);
+//        session.delete(userToDelete);
+//        transaction.commit();
 
     @Override
     public void removeUserById(long id) {
         Transaction transaction = null;
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = getSessionFactory().openSession();) {
             transaction = session.beginTransaction();
-            User userToDelete = session.load(User.class, id);
-            session.delete(userToDelete);
+            User user = session.get(User.class, id);
+            session.delete(user);
             transaction.commit();
-
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback(); // Откатываем транзакцию в случае ошибки
@@ -130,9 +134,6 @@ public class UserDaoHibernateImpl implements UserDao {
             e.printStackTrace();
         }
     }
-
-
-
 
 
 }
